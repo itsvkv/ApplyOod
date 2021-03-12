@@ -50,7 +50,29 @@ async function waitForUrlToContain(url) {
     await waitForPageToload();
 
 }
+async function waitForModelToClose() {
+    await new Promise((resolve, reject) => {
+        var modelClosed = async () => {
+            var model = await driver.findElement(By.id("processing_modal"));
+            var modelDisplay = await model.getCssValue('display')
+            console.log(modelDisplay)
+            if (modelDisplay == 'none') {
+                resolve();
+            }
+            else {
+                setTimeout(() => {
+                    modelClosed();
+                }, 2000)
+            }
+        }
+        setTimeout(() => {
+            modelClosed();
+        }, 2000)
 
+    })
+    await waitForPageToload();
+
+}
 
 
 async function logout() {
@@ -61,6 +83,7 @@ async function save() {
     var element = await driver.findElement(By.id("savebtn"));
     await waitForElementToLoad(element);
     await element.click();
+
 }
 
 async function selectOod() {
@@ -95,9 +118,8 @@ async function start() {
     await loadLeavePage();
     await selectOod();
     await save();
+    await waitForModelToClose();
     await logout();
-
-
 }
 
 (async function () {
@@ -115,9 +137,9 @@ async function start() {
         console.log(e)
     }
     finally {
-        setTimeout(async () => {
-            await driver.quit();
-        }, 1000)
+        // setTimeout(async () => {
+        //     await driver.quit();
+        // }, 1000)
 
     }
 })();
