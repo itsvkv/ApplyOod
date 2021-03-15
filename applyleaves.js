@@ -137,9 +137,6 @@ async function start() {
         console.log(e)
     }
     finally {
-        // setTimeout(async () => {
-        //     await driver.quit();
-        // }, 1000)
-
+            await driver.quit();
     }
 })();
